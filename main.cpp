@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <iostream>
 
 struct Ball
 {
@@ -30,20 +31,20 @@ int main(void){
     ball.x = GetScreenWidth()/2;
     ball.y = GetScreenHeight()/2;
     ball.radius = 15;
-    ball.speedX = 300;
-    ball.speedY = 300;
+    ball.speedX = 500;
+    ball.speedY = 500;
 
     Paddle leftPaddle;
     leftPaddle.x = 30;
     leftPaddle.y = GetScreenHeight()/2;
-    leftPaddle.speed = 500;
+    leftPaddle.speed = 600;
     leftPaddle.width = 25;
     leftPaddle.height = 200;
 
     Paddle rightPaddle;
     rightPaddle.x = GetScreenWidth() - 30;
     rightPaddle.y = GetScreenHeight()/2;
-    rightPaddle.speed = 500;
+    rightPaddle.speed = 600;
     rightPaddle.width = 25;
     rightPaddle.height = 200;
 
@@ -61,20 +62,25 @@ int main(void){
         }
 
         // Left Paddle Movement
-        if(IsKeyDown(KEY_W)){
+        if(IsKeyDown(KEY_W) && leftPaddle.y >= 100){
             leftPaddle.y -= leftPaddle.speed * GetFrameTime();
         }
-        if(IsKeyDown(KEY_S)){
+        if(IsKeyDown(KEY_S) && leftPaddle.y <= GetScreenHeight() - 100){
             leftPaddle.y += leftPaddle.speed * GetFrameTime();
         }
 
         // Right Paddle Movement
-        if(IsKeyDown(KEY_UP)){
+        if(IsKeyDown(KEY_UP) && rightPaddle.y > 100){
             rightPaddle.y -= rightPaddle.speed * GetFrameTime();
         }
-        if(IsKeyDown(KEY_DOWN)){
+        if(IsKeyDown(KEY_DOWN) && rightPaddle.y < GetScreenHeight() - 100){
             rightPaddle.y += rightPaddle.speed * GetFrameTime();
         }
+
+        // Checks Collision for paddle and ball
+        //if(CheckCollisionCircleRec()){
+
+        //}
 
         BeginDrawing();
 
