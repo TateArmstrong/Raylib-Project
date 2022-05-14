@@ -6,4 +6,4 @@
  If you want to mess around with the code and compile it, use the batch file to compile it.
  Open the project folder in a terminal and run...
  
- .\build.bat`
+ `.\build.bat`
