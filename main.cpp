@@ -1,5 +1,4 @@
 #include <raylib.h>
-#include <iostream>
 
 struct Ball
 {
@@ -14,8 +13,12 @@ struct Paddle
 {
     float x, y, speed, width, height;
 
+    Rectangle GetRect(){
+        return Rectangle {x - width/2, y - height/2, width, height};
+    }
+
     void Draw(Color color){
-        DrawRectangle(x - width/2, y - height/2,  width, height, color);
+        DrawRectangleRec(GetRect(), color);
     }
 };
 
@@ -23,6 +26,8 @@ int main(void){
 
     const int windowWidth = 1280;
     const int windowHeight = 720;
+    bool gameOver = false;
+    const char* winner = nullptr;
 
     InitWindow(windowWidth, windowHeight, "Crazy Game!");
     SetTargetFPS(144);
@@ -31,8 +36,8 @@ int main(void){
     ball.x = GetScreenWidth()/2;
     ball.y = GetScreenHeight()/2;
     ball.radius = 15;
-    ball.speedX = 500;
-    ball.speedY = 500;
+    ball.speedX = 300;
+    ball.speedY = 300;
 
     Paddle leftPaddle;
     leftPaddle.x = 30;
@@ -57,9 +62,10 @@ int main(void){
         if (ball.y + ball.radius > GetScreenHeight() || ball.y - ball.radius < 0){
             ball.speedY *= -1;
         }
-        if(ball.x + ball.radius > GetScreenWidth() || ball.x - ball.radius < 0){
+        // Bounces ball of the left and right walls
+        /*if(ball.x + ball.radius > GetScreenWidth() || ball.x - ball.radius < 0){
             ball.speedX *= -1;
-        }
+        }*/
 
         // Left Paddle Movement
         if(IsKeyDown(KEY_W) && leftPaddle.y >= 100){
@@ -78,15 +84,37 @@ int main(void){
         }
 
         // Checks Collision for paddle and ball
-        //if(CheckCollisionCircleRec()){
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, leftPaddle.GetRect())){
+            if(ball.speedX < 0){
+                ball.speedX *= -1.1f;
+                ball.speedY = (ball.y - leftPaddle.y) / (leftPaddle.height/2) * ball.speedX;
+            }
+        }
+        if(CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, rightPaddle.GetRect())){
+            if(ball.speedX > 0){
+                ball.speedX *= -1.1f;
+                ball.speedY = (ball.y - rightPaddle.y) / (rightPaddle.height/2) * -ball.speedX;
+            }
+        }
 
-        //}
+        // Win conditions
+        if(ball.x > GetScreenWidth()){
+            gameOver = true;
+            winner = "Left Player Wins!";
+        }
+        if(ball.x < 0){
+            gameOver = true;
+            winner = "Right Player Wins!";
+        }
 
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
 
             DrawFPS(10, 10);
+            if(gameOver){
+                DrawText(winner, GetScreenWidth()/2 - 200, GetScreenHeight()/2 - 25, 50, BLACK);
+            }
             
             ball.Draw();
             leftPaddle.Draw(BLACK);
