@@ -13,6 +13,7 @@ struct Paddle
 {
     float x, y, speed, width, height;
 
+    // Returns a centered paddle(rectangle type)
     Rectangle GetRect(){
         return Rectangle {x - width/2, y - height/2, width, height};
     }
@@ -107,13 +108,30 @@ int main(void){
             winner = "Right Player Wins!";
         }
 
+        // Resets the game
+        if(gameOver && IsKeyPressed(KEY_SPACE)){
+            gameOver = false;
+            ball.y = GetScreenHeight()/2;
+            ball.x = GetScreenWidth()/2;
+            ball.speedX = 300;
+            ball.speedY = 300;
+            leftPaddle.x = 30;
+            leftPaddle.y = GetScreenHeight()/2;
+            rightPaddle.x = GetScreenWidth() - 30;
+            rightPaddle.y = GetScreenHeight()/2;
+        }
+
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
 
             DrawFPS(10, 10);
+            // Draws text when the game is over
             if(gameOver){
-                DrawText(winner, GetScreenWidth()/2 - 200, GetScreenHeight()/2 - 25, 50, BLACK);
+                int winnerTextWidth = MeasureText(winner, 50);
+                int resetTextWidth = MeasureText("Press space to restart", 30);
+                DrawText(winner, GetScreenWidth()/2 - winnerTextWidth/2, GetScreenHeight()/2 - 50, 50, BLACK);
+                DrawText("Press space to restart", GetScreenWidth()/2 - resetTextWidth/2, GetScreenHeight()/2 + 20, 30, BLACK);
             }
             
             ball.Draw();
