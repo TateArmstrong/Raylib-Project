@@ -36,14 +36,14 @@ int main(void){
     Paddle leftPaddle;
     leftPaddle.x = 30;
     leftPaddle.y = GetScreenHeight()/2;
-    leftPaddle.speed = 300;
+    leftPaddle.speed = 500;
     leftPaddle.width = 25;
     leftPaddle.height = 200;
 
     Paddle rightPaddle;
     rightPaddle.x = GetScreenWidth() - 30;
     rightPaddle.y = GetScreenHeight()/2;
-    rightPaddle.speed = 300;
+    rightPaddle.speed = 500;
     rightPaddle.width = 25;
     rightPaddle.height = 200;
 
@@ -52,11 +52,28 @@ int main(void){
         ball.x += ball.speedX * GetFrameTime();
         ball.y += ball.speedY * GetFrameTime();
 
+        // Ball Wall Bouncing
         if (ball.y + ball.radius > GetScreenHeight() || ball.y - ball.radius < 0){
             ball.speedY *= -1;
         }
         if(ball.x + ball.radius > GetScreenWidth() || ball.x - ball.radius < 0){
             ball.speedX *= -1;
+        }
+
+        // Left Paddle Movement
+        if(IsKeyDown(KEY_W)){
+            leftPaddle.y -= leftPaddle.speed * GetFrameTime();
+        }
+        if(IsKeyDown(KEY_S)){
+            leftPaddle.y += leftPaddle.speed * GetFrameTime();
+        }
+
+        // Right Paddle Movement
+        if(IsKeyDown(KEY_UP)){
+            rightPaddle.y -= rightPaddle.speed * GetFrameTime();
+        }
+        if(IsKeyDown(KEY_DOWN)){
+            rightPaddle.y += rightPaddle.speed * GetFrameTime();
         }
 
         BeginDrawing();
